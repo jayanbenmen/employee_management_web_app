@@ -1,6 +1,7 @@
 package com.project.firstSpringProject.controllers;
 
 import com.project.firstSpringProject.dtos.DepartmentRegistrationDTO;
+import com.project.firstSpringProject.dtos.JobTitleRegistrationDTO;
 import com.project.firstSpringProject.dtos.RoleRegistrationDTO;
 import com.project.firstSpringProject.entities.Department;
 import com.project.firstSpringProject.entities.Role;
@@ -27,6 +28,14 @@ public class AdminController {
             return ResponseEntity.ok("Role created successfully");
         }
         return ResponseEntity.badRequest().body("Role already exists");
+    }
+
+    @PostMapping("/createJob")
+    public ResponseEntity<?> createJob(@RequestBody JobTitleRegistrationDTO jobTitleRegistrationDTO){
+        if(adminService.createJob(jobTitleRegistrationDTO).equals(true)){
+            return ResponseEntity.ok("Job Title created successfully");
+        }
+        return  ResponseEntity.badRequest().body(adminService.createJob(jobTitleRegistrationDTO));
     }
 
     @DeleteMapping("/deleteDepartment/{name}")
@@ -67,4 +76,6 @@ public class AdminController {
     public  ResponseEntity<?> getRoles(){
         return  ResponseEntity.ok(adminService.getRoles());
     }
+
+
 }

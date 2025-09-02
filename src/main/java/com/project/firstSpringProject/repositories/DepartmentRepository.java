@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Integer> {
-    Optional<Department> findByName(String name);
+    Department findByNameLike(String name);
 
     @Query("select d.id as id, d.name as name from Department d")
     List<DepartmentSummary> findDepartments();
