@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findByUsername(String username);
     User findByEmail(String email);
+    UserSummary findByUsernameLike(String username);
+    User findById(int id);
 
     
     @Query("select u.id as id, u.username as username, u.firstName as firstName, u.lastName as lastName, u.email as email from User u")
@@ -27,4 +30,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query("delete from User u where u.username like :username")
     void deleteByUsername(@Param("username") String username);
+
+    @Modifying
+    @Transactional
+    @Query("delete from User u where u.id = :id")
+    void deleteById(@Param("id") int id);
 }

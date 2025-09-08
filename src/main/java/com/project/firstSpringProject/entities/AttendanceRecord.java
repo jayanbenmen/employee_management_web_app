@@ -3,6 +3,7 @@ package com.project.firstSpringProject.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class AttendanceRecord {
     private int id;
 
     @Column(name = "day_date")
-    private Date dayDate;
+    private LocalDate dayDate;
 
     @Column(name = "time_in")
     private LocalTime timeIn;
@@ -32,5 +33,6 @@ public class AttendanceRecord {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 }

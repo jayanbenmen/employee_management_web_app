@@ -1,6 +1,5 @@
 package com.project.firstSpringProject.dtos;
 
-import com.project.firstSpringProject.entities.Department;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class JobTitleRegistrationDTO {
+public class JobTitleUpdateDTO {
     private String name;
+    private String departmentName;
 }

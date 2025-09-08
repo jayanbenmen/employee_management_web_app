@@ -28,7 +28,7 @@ public class Shift {
     @Column(name = "end_time")
     private LocalTime endTime;
 
-    @Column(name = "multiplier", precision = 2, scale = 2)
+    @Column(name = "multiplier", precision = 3, scale = 2)
     private BigDecimal multiplier;
 
     @OneToMany(mappedBy = "shift")

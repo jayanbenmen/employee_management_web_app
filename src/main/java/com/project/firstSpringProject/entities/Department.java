@@ -1,5 +1,6 @@
 package com.project.firstSpringProject.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 

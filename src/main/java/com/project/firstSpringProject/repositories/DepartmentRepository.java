@@ -15,6 +15,8 @@ import java.util.Optional;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Integer> {
     Department findByNameLike(String name);
+    DepartmentSummary findByName(String name);
+    Department findById(int id);
 
     @Query("select d.id as id, d.name as name from Department d")
     List<DepartmentSummary> findDepartments();
@@ -23,4 +25,9 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
     @Transactional
     @Query("delete from Department d where d.name like :name")
     void deleteByName(@Param("name") String name);
+
+    @Modifying
+    @Transactional
+    @Query("delete from Department d where d.id = :id")
+    void deleteById(@Param("id") int id);
 }
