@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/admin")
@@ -141,6 +144,30 @@ public class AdminController {
             return ResponseEntity.ok(adminService.searchJobTitle(name));
         }
         return  ResponseEntity.badRequest().body("Job title does not exist");
+    }
+
+    @GetMapping("/attendance")
+    public Object viewShiftAttendance(
+            @RequestParam(required = false) String shiftName,
+            @RequestParam(required = false) LocalDate dayDate,
+            @RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) String jobName
+            )
+    {
+
+        if(dayDate == null){
+            if(shiftName != null) return adminService.viewShiftAttendance(shiftName);
+            if(departmentName != null) return adminService.viewDepartmentAttendance(departmentName);
+            if(jobName != null) return  adminService.viewJobTitleAttendance(jobName);
+            return adminService.viewAllAttendance();
+        }
+
+        else{
+            if(shiftName != null) return adminService.viewShiftDateAttendance(shiftName, dayDate);
+            if(departmentName != null) return  adminService.viewDepartmentDateAttendance(departmentName, dayDate);
+            if(jobName != null) return adminService.viewJobTitleDateAttendance(jobName, dayDate);
+            return adminService.viewDateAttendance(dayDate);
+        }
     }
 
     @PutMapping("/updateProfile/{user_id}")

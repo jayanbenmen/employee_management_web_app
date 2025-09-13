@@ -20,33 +20,43 @@ public class UserPrincipal implements UserDetails {
         return Collections.singleton(new SimpleGrantedAuthority(user.getRoles().iterator().next().getName()));
     }
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
+    public int getId(){ return user.getId(); }
+
+    public String getFirstName(){
+        return user.getFirstName();
+    }
+
+    public String getLastName(){
+        return user.getLastName();
     }
 
     @Override
-    public String getUsername() {
+    public String getUsername(){
         return user.getUsername();
     }
 
     @Override
-    public boolean isAccountNonExpired() {
+    public String getPassword(){
+        return user.getPassword();
+    }
+
+    @Override
+    public boolean isAccountNonExpired(){
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked(){
         return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired(){
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled(){
         return true;
     }
 }

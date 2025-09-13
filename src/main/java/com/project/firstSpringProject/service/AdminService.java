@@ -6,6 +6,7 @@ import com.project.firstSpringProject.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +27,12 @@ public class AdminService {
 
     @Autowired
     private ShiftRepository shiftRepository;
+
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private AttendanceRecordRepository attendanceRecordRepository;
 
     public boolean createDepartment(DepartmentRegistrationDTO departmentRegistrationDTO){
         if(departmentRepository.findByNameLike(departmentRegistrationDTO.getName()) == null){
@@ -311,5 +316,111 @@ public class AdminService {
         );
     }
 
+    public Object viewShiftAttendance(String shiftName){
+        List<String> errors = new ArrayList<>();
+        if(shiftRepository.findByNameLike(shiftName) == null){
+            errors.add("Shift does not exist");
+            return errors;
+        }
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByShift(shiftName);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+    }
 
+    public Object viewShiftDateAttendance(String shiftName, LocalDate dayDate){
+        List<String> errors = new ArrayList<>();
+        if(shiftRepository.findByNameLike(shiftName) == null){
+            errors.add("Shift does not exist");
+            return errors;
+        }
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByShiftAndDate(shiftName, dayDate);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+    }
+
+    public Object viewDepartmentAttendance(String departmentName){
+        List<String> errors = new ArrayList<>();
+        if(departmentRepository.findByNameLike(departmentName) == null){
+            errors.add("Department does not exist");
+            return errors;
+        }
+
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByDepartment(departmentName);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+    }
+
+    public Object viewDepartmentDateAttendance(String departmentName, LocalDate dayDate){
+        List<String> errors = new ArrayList<>();
+        if(departmentRepository.findByNameLike(departmentName) == null){
+            errors.add("Department does not exist");
+            return errors;
+        }
+
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByDepartmentAndDate(departmentName, dayDate);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+    }
+
+    public Object viewJobTitleAttendance(String jobName){
+        List<String> errors = new ArrayList<>();
+        if(jobTitleRepository.findJobTitleByName(jobName) == null){
+            errors.add("Job Title does not exist");
+            return errors;
+        }
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByJobTitle(jobName);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+
+    }
+
+    public Object viewJobTitleDateAttendance(String jobName, LocalDate dayDate){
+        List<String> errors = new ArrayList<>();
+        if(jobTitleRepository.findJobTitleByName(jobName) == null){
+            errors.add("Job Title does not exist");
+            return errors;
+        }
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByJobTitleAndDate(jobName, dayDate);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+
+    }
+
+    public Object viewDateAttendance(LocalDate dayDate){
+        List<String> errors = new ArrayList<>();
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findByDayDate(dayDate);
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+    }
+
+    public Object viewAllAttendance(){
+        List<String> errors = new ArrayList<>();
+        List<AdminAttendanceSummary> records = attendanceRecordRepository.findAllRecords();
+        if(records.isEmpty()){
+            errors.add("No attendance record found");
+            return errors;
+        }
+        return records;
+    }
 }

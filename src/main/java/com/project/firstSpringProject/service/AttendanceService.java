@@ -1,18 +1,18 @@
 package com.project.firstSpringProject.service;
 
 import com.project.firstSpringProject.dtos.AttendanceRecordDTO;
-import com.project.firstSpringProject.entities.AttendanceRecord;
-import com.project.firstSpringProject.entities.Profile;
-import com.project.firstSpringProject.entities.Shift;
-import com.project.firstSpringProject.entities.User;
+import com.project.firstSpringProject.dtos.AttendanceRecordSummary;
+import com.project.firstSpringProject.entities.*;
 import com.project.firstSpringProject.repositories.AttendanceRecordRepository;
 import com.project.firstSpringProject.repositories.ProfileRepository;
 import com.project.firstSpringProject.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class AttendanceService {
@@ -71,9 +71,6 @@ public class AttendanceService {
         LocalTime allowedTime = shiftStart.minusHours(1);
         LocalTime shiftExtend = shiftEnd.plusHours(1);
 
-        System.out.println(shift.getName());
-        System.out.println(allowedTime);
-        System.out.println(shiftEnd);
         if(shift.getName().equals("Night")){
             return time.isAfter(allowedTime) || time.isBefore(shiftExtend);
         }
@@ -115,5 +112,11 @@ public class AttendanceService {
         LocalTime allowedTimeOut = endTime.minusMinutes(15);
 
         return time.isAfter(allowedTimeOut);
+    }
+
+    public List<AttendanceRecordSummary> viewMyAttendance(Authentication authentication){
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        int userId = userPrincipal.getId();
+        return attendanceRecordRepository.findByUserId(userId);
     }
 }

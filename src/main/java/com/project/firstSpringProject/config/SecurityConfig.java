@@ -2,11 +2,13 @@ package com.project.firstSpringProject.config;
 
 import com.project.firstSpringProject.filters.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -32,13 +35,19 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Value("${allowed.attendance.ip}")
+    private String allowedAttendanceIp;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        IpAddressMatcher hasIpAddress = new IpAddressMatcher(allowedAttendanceIp);
+
         return httpSecurity
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/register/**", "/login").permitAll()
-                        .requestMatchers("/attendance/**").permitAll()
+                        .requestMatchers("/attendance/record").access((authentication, context) ->
+                                new AuthorizationDecision(hasIpAddress.matches(context.getRequest())))
                         .requestMatchers("/helloAdmin", "/admin/**","/students").hasAuthority("ADMIN")
                         .requestMatchers("/helloStaff","/students").hasAuthority("STAFF")
                         .anyRequest().authenticated())
@@ -47,6 +56,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
 //        - How it works in the background -
 //        Customizer<CsrfConfigurer<HttpSecurity>> customizerCsrf = new Customizer<CsrfConfigurer<HttpSecurity>>() {
 //            @Override
